@@ -1,4 +1,3 @@
-
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.robocup_atan.atan.model.ActionsPlayer;
@@ -34,25 +33,27 @@ import java.util.Random;
  * @author Atan
  */
 public class Simple implements ControllerPlayer {
-    private static int    		count         	= 0;
-    private static Logger 		log          	= Logger.getLogger(Simple.class);
-    private Random        		random        	= null;
-    private boolean       		canSeeOwnGoal 	= false;
-    private boolean       		canSeeNothing 	= true;
-    private boolean       		canSeeBall    	= false;
-    private double        		directionBall;
-    private double        		directionOwnGoal;
-    private double       		distanceBall;
-    private double        		distanceOwnGoal;
-    private ActionsPlayer 		player;
+    private static int    	count         	= 0;
+    private static Logger 	log          	= Logger.getLogger(Simple.class);
+    private Random        	random        	= null;
+    private boolean       	canSeeOwnGoal 	= false;
+    private boolean       	canSeeNothing 	= true;
+    private boolean       	canSeeBall    	= false;
+    private double        	directionBall;
+    private double        	directionOwnGoal;
+    private double       	distanceBall;
+    private double        	distanceOwnGoal;
+    private ActionsPlayer 	player;
+    //i used to turn player's head every preInfo().
+    private int			i 		= 1;
     //Type of player added
-    private String 				type;
+    private String 		type;
     //fields for holding opponent's goal information
-    private double 				directionOtherGoal;
-    private double 				distanceOtherGoal;
+    private double 		directionOtherGoal;
+    private double 		distanceOtherGoal;
     //fixed values for dashing keep stamina under control
-    private	int			  		fastDash 		= 70;
-    private	int			  		slowDash 		= 40;
+    private	int		fastDash 	= 70;
+    private	int	  	slowDash 	= 40;
     //The following fields hold location information
     
     
@@ -73,8 +74,9 @@ public class Simple implements ControllerPlayer {
     }
 
     /** {@inheritDoc} 
-     * player begins with turned neck in order to 
-       be able to turn head evenly, compared to body, every preInfo().*/
+     * turns player neck 40degres to the right to begin with so 
+     * player will turn head evenly, compared to body, 
+     every preInfo().*/
     @Override
     public void setPlayer(ActionsPlayer p) {
         player = p;
@@ -84,19 +86,15 @@ public class Simple implements ControllerPlayer {
     /** {@inheritDoc} */
     @Override
     public void preInfo() {
-    	int i = 1;
     	if(i%2 == 1){
     		player.turnNeck(-80);
     	} else {
     		player.turnNeck(80);
     	}
-    	
+    	i++;
         canSeeOwnGoal = false;
         canSeeBall    = false;
-        canSeeNothing = true;
-        //Goalie's preInfo formerly in Silly.java
-   //     distBall    = 1000;
-   //     minDistLine = 1000;        
+        canSeeNothing = true;     
     }
 
     /** {@inheritDoc} */
