@@ -109,16 +109,16 @@ public class Simple implements ControllerPlayer {
     	} else {
     		if(this.getType().equals("Defender")){
     			
-    		}
-    	} else {
-    		if(this.getType().equals("Midfielder")){
+    		} else {
+    			if(this.getType().equals("Midfielder")){
     			
-    		}
-    	} else {
-    		if(this.getType().equals("Attacker")){
+    			} else {
+    				if(this.getType().equals("Attacker")){
     			
+    				}
+    			}
     		}
-    	} 
+    	}
     	/**
         if (canSeeNothing) {
             canSeeNothingAction();
