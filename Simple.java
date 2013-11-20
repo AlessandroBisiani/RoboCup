@@ -1,4 +1,4 @@
-//damnit.
+
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.robocup_atan.atan.model.ActionsPlayer;
@@ -45,15 +45,13 @@ public class Simple implements ControllerPlayer {
     private double       		distanceBall;
     private double        		distanceOwnGoal;
     private ActionsPlayer 		player;
-    //GOALIE fields. Formerly in Silly.java
-    //private static Logger 	logGoalie		= Logger.getLogger(Silly.class);
-    private double        		distBall    	= 1000;
-    private double        		minDistLine 	= 1000;
+    //Type of player added
+    private String 				type;
     //fields for holding opponent's goal information
     private double 				directionOtherGoal;
     private double 				distanceOtherGoal;
     //fixed values for dashing keep stamina under control
-    private	int			  		fastDash 		= 80;
+    private	int			  		fastDash 		= 70;
     private	int			  		slowDash 		= 40;
     //The following fields hold location information
     
@@ -74,22 +72,31 @@ public class Simple implements ControllerPlayer {
         return player;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc} 
+     * player begins with turned neck in order to 
+       be able to turn head evenly, compared to body, every preInfo().*/
     @Override
     public void setPlayer(ActionsPlayer p) {
         player = p;
+        player.turnNeck(40);
     }
 
     /** {@inheritDoc} */
     @Override
     public void preInfo() {
+    	int i = 1;
+    	if(i%2 == 1){
+    		player.turnNeck(-80);
+    	} else {
+    		player.turnNeck(80);
+    	}
+    	
         canSeeOwnGoal = false;
         canSeeBall    = false;
         canSeeNothing = true;
         //Goalie's preInfo formerly in Silly.java
-        distBall    = 1000;
-        minDistLine = 1000;
-        
+   //     distBall    = 1000;
+   //     minDistLine = 1000;        
     }
 
     /** {@inheritDoc} */
@@ -233,6 +240,7 @@ public class Simple implements ControllerPlayer {
         this.canSeeBall    = true;
         this.distanceBall  = distance;
         this.directionBall = direction;
+        
     }
 
     /** {@inheritDoc} */
@@ -311,7 +319,7 @@ public class Simple implements ControllerPlayer {
     /** {@inheritDoc} */
     @Override
     public String getType() {
-        return "Simple";
+        return type;
     }
 
     /** {@inheritDoc} */
@@ -386,8 +394,7 @@ public class Simple implements ControllerPlayer {
      */
     //substituted for fastDash
     private void canSeeAnythingAction() {
-        getPlayer().dash(slowDash);
-        getPlayer().turn(180);
+        getPlayer().dash(0);
         if (log.isDebugEnabled()) {
             log.debug("a");
         }
@@ -418,7 +425,7 @@ public class Simple implements ControllerPlayer {
     /**
      * Randomly choose a fast dash value.
      * @return
-     */
+     *
     private int randomDashValueFast() {
         return 30 + random.nextInt(100);
     }
@@ -426,11 +433,12 @@ public class Simple implements ControllerPlayer {
     /**
      * Randomly choose a slow dash value.
      * @return
-     */
+     *
     private int randomDashValueSlow() {
         return -10 + random.nextInt(50);
     }
-
+	*/
+    
     /**
      * Turn towards the ball.
      */
@@ -449,10 +457,11 @@ public class Simple implements ControllerPlayer {
     /**
      * Randomly choose a kick direction.
      * @return
-     */
+     *
     private int randomKickDirectionValue() {
         return -45 + random.nextInt(90);
     }
+    */
 
     /**
      * Pause the thread.
