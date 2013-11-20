@@ -104,21 +104,22 @@ public class Simple implements ControllerPlayer {
     /** {@inheritDoc} */
     @Override
     public void postInfo() {
-    	if(player.getType().equals("Goalie")){
-    		
+    	if(this.getType().equals("Goalie")){
+    		this.getPlayer().dash(100);
     	} else {
-    		if(player.getType().equals("Defender")){
+    		if(this.getType().equals("Defender")){
     			
     		}
     	} else {
-    		if(player.getType().equals("Midfielder")){
+    		if(this.getType().equals("Midfielder")){
     			
     		}
     	} else {
-    		if(player.getType().equals("Attacker")){
+    		if(this.getType().equals("Attacker")){
     			
     		}
-    	}  		
+    	} 
+    	/**
         if (canSeeNothing) {
             canSeeNothingAction();
         } else if (canSeeOwnGoal) {
@@ -135,6 +136,9 @@ public class Simple implements ControllerPlayer {
         } else {
             canSeeAnythingAction();
         }
+        */
+        
+        
         /** 
          * if (distBall < 10) {
             getPlayer().turn(10.0);
