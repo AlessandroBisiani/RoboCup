@@ -83,23 +83,42 @@ public class Simple implements ControllerPlayer {
         player.turnNeck(40);
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc} 
+    *Resets canSeeOwnGoal, canSeeBall, and canSeeNothing so that
+    *if the player has lost track of it's own goal or the ball since 
+    *the last preInfo() it will default to seeing nothing.
+    *Also alternately turns the player's head right and left by 80degrees.*/
     @Override
     public void preInfo() {
+    	canSeeOwnGoal = false;
+        canSeeBall    = false;
+        canSeeNothing = true;
     	if(i%2 == 1){
     		player.turnNeck(-80);
     	} else {
     		player.turnNeck(80);
     	}
-    	i++;
-        canSeeOwnGoal = false;
-        canSeeBall    = false;
-        canSeeNothing = true;     
+    	i++;  
     }
 
     /** {@inheritDoc} */
     @Override
     public void postInfo() {
+    	if(player.getType().equals("Goalie")){
+    		
+    	} else {
+    		if(player.getType().equals("Defender")){
+    			
+    		}
+    	} else {
+    		if(player.getType().equals("Midfielder")){
+    			
+    		}
+    	} else {
+    		if(player.getType().equals("Attacker")){
+    			
+    		}
+    	}  		
         if (canSeeNothing) {
             canSeeNothingAction();
         } else if (canSeeOwnGoal) {
@@ -134,6 +153,7 @@ public class Simple implements ControllerPlayer {
     public void infoSeeFlagRight(Flag flag, double distance, double direction, double distChange, double dirChange,
                                  double bodyFacingDirection, double headFacingDirection) {
         canSeeNothing = false;
+        
     }
 
     /** {@inheritDoc} */
