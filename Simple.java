@@ -54,11 +54,14 @@ public class Simple implements ControllerPlayer {
     //fixed values for dashing keep stamina under control
     private	int		fastDash 	= 70;
     private	int	  	slowDash 	= 40;
-    //The following fields hold location information
+    
+    private double 			distanceRight;
+    private double			distanceLeft;
+    private boolean 		canSeeFlagRight = false;
+    private boolean			canSeeFlagLeft	= false;
+    private double 			distanceFlagCenter;
     
     
-    //private ControllerPlayer x;	
-
     /**
      * Constructs a new simple client.
      */
@@ -74,13 +77,13 @@ public class Simple implements ControllerPlayer {
     }
 
     /** {@inheritDoc} 
-     * turns player neck 40degres to the right to begin with so 
+     * turns player neck 30degres to the right to begin with so 
      * player will turn head evenly, compared to body, 
      every preInfo().*/
     @Override
     public void setPlayer(ActionsPlayer p) {
         player = p;
-        player.turnNeck(40);
+        player.turnNeck(30);
     }
 
     /** {@inheritDoc} 
@@ -93,32 +96,64 @@ public class Simple implements ControllerPlayer {
     	canSeeOwnGoal = false;
         canSeeBall    = false;
         canSeeNothing = true;
+        distanceRight = 0.0;
+        distanceLeft = 0.0;
+        distanceFlagCenter = 0.0;
     	if(i%2 == 1){
-    		player.turnNeck(-80);
+    		getPlayer().turnNeck(-60);
     	} else {
-    		player.turnNeck(80);
+    		getPlayer().turnNeck(60);
     	}
     	i++;  
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc} 
+     * Provides different behaviour based on the player type.*/
     @Override
     public void postInfo() {
+	//defines Goalie behaviour
     	if(this.getType().equals("Goalie")){
-    		this.getPlayer().dash(100);
-    	} else {
-    		if(this.getType().equals("Defender")){
+    		if (canSeeNothing) {
+                canSeeNothingAction();}
+    			else if(canSeeBall && (distanceBall < 0.7)) {
+    				this.getPlayer().catchBall(directionBall); 
+    			}else if(canSeeBall) {
+    				this.getPlayer().turn(directionBall);
+    			}else if((distanceRight > 50) || (distanceLeft > 50) || (distanceFlagCenter < 30)){
+    				if(canSeeOwnGoal){
+    					this.getPlayer().turn(directionOwnGoal);
+    					this.getPlayer().dash(60);
+    				} else {
+    					this.getPlayer().turn(160);
+    				}
+    			}else if(canSeeOwnGoal) {
+    				this.getPlayer().turn(160); 
+    			}else {
+    				canSeeAnythingAction();
+    			}
+	//defines Defender behaviour
+    		}else if (this.getType().equals("Defender")){
+    			if (canSeeNothing) {
+                    canSeeNothingAction();
+    			}else if((distanceRight > 60) || (distanceLeft > 60) || (distanceFlagCenter > 30)) {
+    				
+    			}
     			
-    		} else {
-    			if(this.getType().equals("Midfielder")){
-    			
-    			} else {
-    				if(this.getType().equals("Attacker")){
-    			
+	//defines Midfielder behaviour
+    		else if(this.getType().equals("Midfielder")){
+    					if (canSeeNothing) {
+    						canSeeNothingAction();
+    				}
+	//defines Attacker behaviour
+    		else if(this.getType().equals("Attacker")){
+    						if (canSeeNothing) {
+    							canSeeNothingAction();
     				}
     			}
     		}
     	}
+    }
+    	
     	/**
         if (canSeeNothing) {
             canSeeNothingAction();
@@ -136,9 +171,7 @@ public class Simple implements ControllerPlayer {
         } else {
             canSeeAnythingAction();
         }
-        */
-        
-        
+    	*/
         /** 
          * if (distBall < 10) {
             getPlayer().turn(10.0);
@@ -150,14 +183,15 @@ public class Simple implements ControllerPlayer {
         }
         log.info("I am a silly Client");
         */
-    }
+    
 
     /** {@inheritDoc} */
     @Override
     public void infoSeeFlagRight(Flag flag, double distance, double direction, double distChange, double dirChange,
                                  double bodyFacingDirection, double headFacingDirection) {
         canSeeNothing = false;
-        
+        canSeeFlagRight = true;
+        distanceRight = distance;
     }
 
     /** {@inheritDoc} */
@@ -165,6 +199,8 @@ public class Simple implements ControllerPlayer {
     public void infoSeeFlagLeft(Flag flag, double distance, double direction, double distChange, double dirChange,
                                 double bodyFacingDirection, double headFacingDirection) {
         canSeeNothing = false;
+        canSeeFlagLeft = true;
+        distanceLeft = distance;
     }
 
     /** {@inheritDoc} */
@@ -186,6 +222,7 @@ public class Simple implements ControllerPlayer {
     public void infoSeeFlagCenter(Flag flag, double distance, double direction, double distChange, double dirChange,
                                   double bodyFacingDirection, double headFacingDirection) {
         canSeeNothing = false;
+        distanceFlagCenter = distance;
     }
 
     /** {@inheritDoc} */
@@ -258,11 +295,10 @@ public class Simple implements ControllerPlayer {
     @Override
     public void infoSeeBall(double distance, double direction, double distChange, double dirChange,
                             double bodyFacingDirection, double headFacingDirection) {
-        canSeeNothing      = false;
-        this.canSeeBall    = true;
-        this.distanceBall  = distance;
-        this.directionBall = direction;
-        
+        canSeeNothing   = false;
+        canSeeBall   	= true;
+        distanceBall  	= distance;
+        directionBall 	= direction;
     }
 
     /** {@inheritDoc} */
@@ -346,7 +382,9 @@ public class Simple implements ControllerPlayer {
 
     /** {@inheritDoc} */
     @Override
-    public void setType(String newType) {}
+    public void setType(String newType) {
+    	type = newType;
+    }
 
     /** {@inheritDoc} */
     @Override
